@@ -1,0 +1,88 @@
+unit uModelPessoa;
+
+interface
+
+type
+  TModelPessoa = class
+    private
+      FNome: string;
+      FSobrenome: string;
+      FApelido: string;
+      FDataNascimento: TDate;
+      FRelacionamento: string;
+      function GetNome: string;
+      function GetApelido: string;
+      function GetDataNascimento: TDate;
+      function GetSobrenome: string;
+      function GetRelacionamento: string;
+      procedure SetNome(const Value: string);
+      procedure SetApelido(const Value: string);
+      procedure SetDataNascimento(const Value: TDate);
+      procedure SetSobrenome(const Value: string);
+      procedure SetRelacionamento(const Value: string);
+    public
+      property Nome: string read GetNome write SetNome;
+      property Sobrenome: string read GetSobrenome write SetSobrenome;
+      property Apelido: string read GetApelido write SetApelido;
+      property DataNascimento: TDate read GetDataNascimento write SetDataNascimento;
+      property Relacionamento: string read GetRelacionamento write SetRelacionamento;
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TModelPessoa }
+
+function TModelPessoa.GetApelido: string;
+begin
+  result := FApelido;
+end;
+
+function TModelPessoa.GetDataNascimento: TDate;
+begin
+  result := FDataNascimento;
+end;
+
+function TModelPessoa.GetNome: string;
+begin
+  result := FNome;
+end;
+
+function TModelPessoa.GetSobrenome: string;
+begin
+  result := FSobrenome;
+end;
+
+function TModelPessoa.GetRelacionamento: string;
+begin
+  result := FRelacionamento;
+end;
+
+procedure TModelPessoa.SetApelido(const Value: string);
+begin
+  FApelido := Value;
+end;
+
+procedure TModelPessoa.SetDataNascimento(const Value: TDate);
+begin
+  FDataNascimento := Value;
+end;
+
+procedure TModelPessoa.SetNome(const Value: string);
+begin
+  FNome := Value;
+end;
+
+procedure TModelPessoa.SetSobrenome(const Value: string);
+begin
+  FSobrenome := Value;
+end;
+
+procedure TModelPessoa.SetRelacionamento(const Value: string);
+begin
+  FRelacionamento := Value;
+end;
+
+end.

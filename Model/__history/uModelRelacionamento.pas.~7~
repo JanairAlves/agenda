@@ -1,0 +1,42 @@
+unit uModelRelacionamento;
+
+interface
+
+uses
+  TypInfo;
+
+type
+  TModelRelacionamento = (
+    [EnumDescription('Outros')] tOutros,
+    [EnumDescription('Família')] tFamilia,
+    [EnumDescription('Trabalho')] tTrabalho,
+    [EnumDescription('Amigo')] tAmigo
+    );
+
+implementation
+
+function GetEnumDescription(Valor: TModelRelacionamento): string;
+var
+  TypeInfo: PTypeInfo;
+  Attr: TCustomAttribute;
+begin
+  TypeInfo := GetTypeInfo(TModelRelacionamento);
+  for Attr in GetTypeData(TypeInfo).GetAttributes do
+  begin
+    if Attr is TEnumDescriptionAttribute then
+    begin
+      Result := TEnumDescriptionAttribute(Attr).Description;
+      Exit;
+    end;
+  end;
+  Result := ''; // Retorna vazio se não encontrar a descrição
+end;
+
+var
+  relacionamento: TModelRelacionamento;
+begin
+  relacionamento := tFamilia;
+  ShowMessage(GetEnumDescription(relacionamento)); // Exibe "Família"
+end;
+
+end.

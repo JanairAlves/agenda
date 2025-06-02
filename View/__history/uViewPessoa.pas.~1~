@@ -1,0 +1,43 @@
+unit uViewContato;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls;
+
+type
+  TfrmViewCadastroContato = class(TForm)
+    edtNome: TEdit;
+    Label1: TLabel;
+    Sobrenome: TLabel;
+    edtSobrenome: TEdit;
+    edtApelido: TEdit;
+    Label2: TLabel;
+    edtDataNascimento: TEdit;
+    Label3: TLabel;
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    edtRelacionamento: TComboBox;
+    Relação: TLabel;
+    pnRodape: TPanel;
+    pnCentral: TPanel;
+    pnBotoesAcoes: TPanel;
+    btSalvar: TButton;
+    btLimpar: TButton;
+    btCancelar: TButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmViewCadastroContato: TfrmViewCadastroContato;
+
+implementation
+
+{$R *.dfm}
+
+end.

@@ -1,0 +1,39 @@
+unit uViewAgendaPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, uViewContato;
+
+type
+  TfrmViewAgendaPrincipal = class(TForm)
+    pnAgendaContatos: TPanel;
+    pnCentral: TPanel;
+    btAdicionarContato: TButton;
+    procedure btAdicionarContatoClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmViewAgendaPrincipal: TfrmViewAgendaPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmViewAgendaPrincipal.btAdicionarContatoClick(Sender: TObject);
+begin
+  fCadastroContato.ShowModal;
+end;
+
+procedure TfrmViewAgendaPrincipal.FormCreate(Sender: TObject);
+begin
+  ReportMemoryLeaksOnShutdown := True;
+end;
+
+end.
