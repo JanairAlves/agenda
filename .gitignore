@@ -11,6 +11,7 @@
 *.identcache
 *dproj.local
 *.stat
+.json
 __history/
 
 # Ignorar pastas comuns
