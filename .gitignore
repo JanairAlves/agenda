@@ -7,15 +7,12 @@
 
 # Ignorar arquivos de configuração da IDE
 *.dsk
+*.~dsk
 *.identcache
-*.local
-*.tvsconfig
+*dproj.local
+*.stat
 __history/
 
-# Ignorar arquivos temporários
-*.log
-*.tmp
-
-# Ignorar pastas comuns de build
+# Ignorar pastas comuns
 Win32/
 Win64/
