@@ -14,7 +14,7 @@
 	- [ ] Cada contato terá uma relação na agenda.
 	- [ ] Cada contato poderá ser excluído (exclusão digital).
 	
-Contato:
+* Contato:
 	- Nome.
 	- Sobrenome.
 	- Apelido.
