@@ -1,0 +1,21 @@
+# Ignorar arquivos binários compilados
+*.dcu
+*.exe
+*.dll
+*.bpl
+*.ocx
+
+# Ignorar arquivos de configuração da IDE
+*.dsk
+*.identcache
+*.local
+*.tvsconfig
+__history/
+
+# Ignorar arquivos temporários
+*.log
+*.tmp
+
+# Ignorar pastas comuns de build
+Win32/
+Win64/
