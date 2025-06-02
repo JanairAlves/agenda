@@ -1,4 +1,4 @@
-# 📋 TO-DO List do Projeto
+# 📋 TO-DO List Project
 
 ## Legenda
 
@@ -6,7 +6,7 @@
 - ~~Feito~~
 - Pendente
 
-## Projeto (TDD)
+## Projeto ([TDD](https://github.com/KAYOKG/BibliotecaDev/blob/main/LivrosDev/TDD%20-%20Desenvolvimento%20Guiado%20por%20Testes%20-%20Autor%20(Ken%20Beck).pdf))
 
 -  __Verificar se o arquivo de contatos JSON já existe.__
 -  Gravar contato no arquivo JSON incrementando novos contatos.
@@ -15,4 +15,4 @@
 
 ## Melhorias futuras
 
--  ...
+-  Implementar Logon\Logoff no acesso ao aplicativo.
