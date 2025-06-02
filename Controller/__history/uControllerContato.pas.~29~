@@ -1,0 +1,47 @@
+unit uControllerContato;
+
+interface
+
+uses
+  uModelContato;
+
+type
+  TCContato = class
+    private
+      FModelContato: TMContato;
+    public
+      constructor create;
+      destructor destroy; override;
+      procedure ValidarContato;
+      function SalvarContato(aModelContato: TMContato): boolean;
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TCContato }
+
+constructor TCContato.create;
+begin
+  FModelContato := TMContato.Create;
+end;
+
+destructor TCContato.destroy;
+begin
+  inherited;
+  FreeAndNil(FModelContato);
+end;
+
+function SalvarContato(aModelContato: TMContato): boolean;
+begin
+  result := false;
+end;
+
+procedure TCContato.ValidarContato;
+begin
+
+end;
+
+end.

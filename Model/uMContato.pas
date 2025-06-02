@@ -1,0 +1,204 @@
+unit uMContato;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, REST.JsonReflect;
+
+type
+  [JsonReflect]
+  TMContato = class
+    private
+      [JSONNameAttribute('Id')]
+      FId: integer;
+      [JSONNameAttribute('Nome')]
+      FNome: string;
+      [JSONNameAttribute('Sobrenome')]
+      FSobrenome: string;
+      [JSONNameAttribute('Apelido')]
+      FApelido: string;
+      [JSONNameAttribute('Nascimento')]
+      FNascimento: TDate;
+      [JSONNameAttribute('Relacionamento')]
+      FRelacionamento: string;
+      [JSONNameAttribute('Excluído')]
+      FExcluido: char;
+      function GetId: integer;
+      function GetNome: string;
+      function GetApelido: string;
+      function GetExcluido: char;
+      function GetNascimento: TDate;
+      function GetSobrenome: string;
+      function GetRelacionamento: string;
+      procedure SetId(const Value: integer);
+      procedure SetNome(const Value: string);
+      procedure SetExcluido(const Value: char);
+      procedure SetApelido(const Value: string);
+      procedure SetNascimento(const Value: TDate);
+      procedure SetSobrenome(const Value: string);
+      procedure SetRelacionamento(const Value: string);
+    public
+      property Id: integer read GetId write SetId;
+      property Nome: string read GetNome write SetNome;
+      property Sobrenome: string read GetSobrenome write SetSobrenome;
+      property Apelido: string read GetApelido write SetApelido;
+      property Nascimento: TDate read GetNascimento write SetNascimento;
+      property Relacionamento: string read GetRelacionamento write SetRelacionamento;
+      property Excluido: char read GetExcluido write SetExcluido;
+  end;
+
+  TMRepositorioContato = class
+    private
+      function SerializarJson(contato: TMContato): string;
+      procedure ValidarContato(contato: TMContato);
+    public
+      procedure Salvar(contato: TMContato);
+      function Deletar(id: integer): boolean;
+      function ConsultarPorId(id: integer): TMContato;
+      function ConsultarTodos: TList;
+      class function ValidarData(data: string): TDateTime;
+  end;
+
+const
+ numeroInvalido: integer = -0;
+
+implementation
+
+uses
+  REST.Json, System.IOUtils;
+
+{ TMContato }
+
+function TMContato.GetApelido: string;
+begin
+  result := FApelido;
+end;
+
+function TMContato.GetExcluido: char;
+begin
+  result := FExcluido;
+end;
+
+function TMContato.GetId: integer;
+begin
+  result := FId;
+end;
+
+function TMContato.GetNascimento: TDate;
+begin
+  result := FNascimento;
+end;
+
+function TMContato.GetNome: string;
+begin
+  result := FNome;
+end;
+
+function TMContato.GetSobrenome: string;
+begin
+  result := FSobrenome;
+end;
+
+function TMContato.GetRelacionamento: string;
+begin
+  result := FRelacionamento;
+end;
+
+procedure TMContato.SetApelido(const Value: string);
+begin
+  FApelido := Value;
+end;
+
+procedure TMContato.SetExcluido(const Value: char);
+begin
+  FExcluido := Value;
+end;
+
+procedure TMContato.SetId(const Value: integer);
+begin
+  { Não Implementar esse método, ou Implementar pegar o ID max + 1.}
+  FId := value;
+end;
+
+procedure TMContato.SetNascimento(const Value: TDate);
+begin
+  FNascimento := Value;
+end;
+
+procedure TMContato.SetNome(const Value: string);
+begin
+  FNome := Value;
+end;
+
+procedure TMContato.SetSobrenome(const Value: string);
+begin
+  FSobrenome := Value;
+end;
+
+procedure TMContato.SetRelacionamento(const Value: string);
+begin
+  FRelacionamento := Value;
+end;
+
+{ TMRepositorioContato }
+
+function TMRepositorioContato.ConsultarPorId(id: integer): TMContato;
+begin
+  //
+end;
+
+function TMRepositorioContato.ConsultarTodos: TList;
+begin
+  //
+end;
+
+function TMRepositorioContato.Deletar(id: integer): boolean;
+begin
+  //
+end;
+
+procedure TMRepositorioContato.Salvar(contato: TMContato);
+var
+  contatoJsonStr: string;
+begin
+  try
+    contatoJsonStr := SerializarJson(contato);
+    TFile.WriteAllText('Contatos.json', contatoJsonStr);
+  except
+    on E: Exception do
+      raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
+  end;
+end;
+
+function TMRepositorioContato.SerializarJson(contato: TMContato): string;
+begin
+  ValidarContato(contato);
+  result := TJson.ObjectToJsonString(contato, [joIndentCasePreserve]);
+end;
+
+procedure TMRepositorioContato.ValidarContato(contato: TMContato);
+begin
+  if contato.Id <= 0 then
+    raise Exception.Create('Id do contato inválido.');
+
+  if Trim(contato.Nome) = '' then
+    raise Exception.Create('O nome do contato não pode ser vázio.');
+
+  if Trim(contato.Relacionamento) = '' then
+    raise Exception.Create('O relacionamento precisa ser informado.');
+
+  if Trim(contato.Excluido) = '' then
+    raise Exception.Create('A exclusão lógica precisa ser informada com ''S'' ou ''N''.');
+
+  if (contato.Nascimento = -0) then
+    raise Exception.Create('Data de nascimento inválida.');
+end;
+
+class function TMRepositorioContato.ValidarData(data: string): TDateTime;
+begin
+  result := numeroInvalido;
+  TryStrToDate(data, result);
+end;
+
+end.
+

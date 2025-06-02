@@ -1,0 +1,202 @@
+object frmViewContato: TfrmViewContato
+  Left = 0
+  Top = 0
+  Caption = 'Cadastro de contato'
+  ClientHeight = 242
+  ClientWidth = 527
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnRodape: TPanel
+    Left = 0
+    Top = 186
+    Width = 527
+    Height = 56
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 0
+    object btEndereco: TButton
+      Left = 76
+      Top = 2
+      Width = 80
+      Height = 50
+      Caption = 'Endere'#231'o'
+      TabOrder = 0
+    end
+    object btTelefone: TButton
+      Left = 218
+      Top = 2
+      Width = 80
+      Height = 50
+      Caption = 'Telefone'
+      TabOrder = 1
+    end
+    object btRedeSocial: TButton
+      Left = 356
+      Top = 2
+      Width = 80
+      Height = 50
+      Caption = 'Rede Social'
+      TabOrder = 2
+    end
+  end
+  object pnCentral: TPanel
+    Left = 0
+    Top = 0
+    Width = 527
+    Height = 186
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 1
+    ExplicitLeft = -2
+    object lbNome: TLabel
+      Left = 28
+      Top = 33
+      Width = 35
+      Height = 16
+      Caption = 'Nome'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lbApelido: TLabel
+      Left = 15
+      Top = 72
+      Width = 48
+      Height = 16
+      Caption = 'Apelido'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lbNascimento: TLabel
+      Left = 242
+      Top = 72
+      Width = 74
+      Height = 16
+      Caption = 'Nascimento'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lbRelacionamento: TLabel
+      Left = 12
+      Top = 106
+      Width = 103
+      Height = 16
+      Caption = 'Relacionamento'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lbSobrenome: TLabel
+      Left = 242
+      Top = 33
+      Width = 73
+      Height = 16
+      Caption = 'Sobrenome'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object edtApelido: TEdit
+      Left = 70
+      Top = 67
+      Width = 159
+      Height = 21
+      TabOrder = 2
+    end
+    object edtDataNascimento: TEdit
+      Left = 326
+      Top = 67
+      Width = 191
+      Height = 21
+      TabOrder = 3
+    end
+    object edtNome: TEdit
+      Left = 69
+      Top = 28
+      Width = 159
+      Height = 21
+      TabOrder = 0
+    end
+    object cbRelacionamento: TComboBox
+      Left = 121
+      Top = 101
+      Width = 230
+      Height = 21
+      ItemIndex = 3
+      TabOrder = 4
+      Text = 'Outros'
+      Items.Strings = (
+        'Fam'#237'lia'
+        'Trabalho'
+        'Amigo'
+        'Outros')
+    end
+    object edtSobrenome: TEdit
+      Left = 326
+      Top = 28
+      Width = 191
+      Height = 21
+      TabOrder = 1
+    end
+    object pnBotoesAcoes: TPanel
+      Left = 0
+      Top = 146
+      Width = 527
+      Height = 40
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 5
+    end
+  end
+  object btSalvar: TButton
+    Left = 76
+    Top = 147
+    Width = 80
+    Height = 35
+    Caption = 'Salvar'
+    TabOrder = 2
+  end
+  object btLimpar: TButton
+    Left = 218
+    Top = 147
+    Width = 80
+    Height = 35
+    Caption = 'Limpar'
+    TabOrder = 3
+    OnClick = btLimparClick
+  end
+  object btFechar: TButton
+    Left = 356
+    Top = 147
+    Width = 80
+    Height = 35
+    Caption = 'Fechar'
+    TabOrder = 4
+    OnClick = btFecharClick
+  end
+end

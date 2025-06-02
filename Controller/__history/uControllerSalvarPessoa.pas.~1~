@@ -1,0 +1,12 @@
+unit uSalvarPessoa;
+
+interface
+
+type
+  TSalvarPessoa = class
+
+  end;
+
+implementation
+
+end.
