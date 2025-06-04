@@ -49,18 +49,22 @@ type
 
   TMRepositorioContato = class
     private
+      FExisteArquivoJSON: boolean;
       function SerializarJson(contato: TMContato): string;
       procedure ValidarContato(contato: TMContato);
     public
+      constructor create;
       procedure Salvar(contato: TMContato);
       function Deletar(id: integer): boolean;
       function ConsultarPorId(id: integer): TMContato;
       function ConsultarTodos: TList;
       class function ValidarData(data: string): TDateTime;
+      property ExisteArquivoJSON: boolean read FExisteArquivoJSON;
   end;
 
 const
  numeroInvalido: integer = -0;
+ arquivoContatosJSON: string = 'Contatos.json';
 
 implementation
 
@@ -152,6 +156,11 @@ begin
   //
 end;
 
+constructor TMRepositorioContato.create;
+begin
+  FExisteArquivoJSON := FileExists(arquivoContatosJSON);
+end;
+
 function TMRepositorioContato.Deletar(id: integer): boolean;
 begin
   //
@@ -162,8 +171,11 @@ var
   contatoJsonStr: string;
 begin
   try
-    contatoJsonStr := SerializarJson(contato);
-    TFile.WriteAllText('Contatos.json', contatoJsonStr);
+    if not ExisteArquivoJSON then
+    begin
+      contatoJsonStr := SerializarJson(contato);
+      TFile.WriteAllText(arquivoContatosJSON, contatoJsonStr);
+    end;
   except
     on E: Exception do
       raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
