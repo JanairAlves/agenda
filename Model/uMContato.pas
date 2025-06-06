@@ -3,7 +3,8 @@ unit uMContato;
 interface
 
 uses
-  System.SysUtils, System.Classes, REST.JsonReflect;
+  System.SysUtils, System.DateUtils, System.Classes, REST.JsonReflect,
+  System.JSON;
 
 type
   [JsonReflect]
@@ -50,7 +51,7 @@ type
   TMRepositorioContato = class
     private
       FExisteArquivoJSON: boolean;
-      function SerializarJson(contato: TMContato): string;
+      function SerializarJson(contato: TMContato): TJsonObject;
       procedure ValidarContato(contato: TMContato);
     public
       constructor create;
@@ -168,24 +169,40 @@ end;
 
 procedure TMRepositorioContato.Salvar(contato: TMContato);
 var
-  contatoJsonStr: string;
+  contatoJsonArray: TJsonArray;
 begin
+  contatoJsonArray := TJsonArray.Create;
   try
-    if not ExisteArquivoJSON then
-    begin
-      contatoJsonStr := SerializarJson(contato);
-      TFile.WriteAllText(arquivoContatosJSON, contatoJsonStr);
+    try
+        if ExisteArquivoJSON then
+        contatoJsonArray := TJsonValue.ParseJSONValue(TFile.ReadAllText(arquivoContatosJSON, TEncoding.UTF8)) as TJsonArray;
+
+      contatoJsonArray.Add(SerializarJson(contato));
+      TFile.WriteAllText(arquivoContatosJSON, contatoJsonArray.ToString, TEncoding.UTF8);
+    except
+      on E: Exception do
+        raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
     end;
-  except
-    on E: Exception do
-      raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
+  finally
+    FreeAndNil(contatoJsonArray);
   end;
 end;
 
-function TMRepositorioContato.SerializarJson(contato: TMContato): string;
+function TMRepositorioContato.SerializarJson(contato: TMContato): TJsonObject;
 begin
-  ValidarContato(contato);
-  result := TJson.ObjectToJsonString(contato, [joIndentCasePreserve]);
+  result := TJsonObject.Create;
+  try
+    result.AddPair('Id', TJsonNumber.Create(contato.FId));
+    result.AddPair('Nome', TJsonString.Create(contato.FNome));
+    result.AddPair('Sobrenome', TJsonString.Create(contato.FSobrenome));
+    result.AddPair('Apelido', TJsonString.Create(contato.FApelido));
+    result.AddPair('Nascimento', DateToISO8601(contato.FNascimento));
+    result.AddPair('Relacionamento', TJsonString.Create(contato.FRelacionamento));
+    result.AddPair('Excluido', TJsonString.Create(contato.FExcluido));
+  Except
+    on E: Exception do
+      raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
+  end;
 end;
 
 procedure TMRepositorioContato.ValidarContato(contato: TMContato);
