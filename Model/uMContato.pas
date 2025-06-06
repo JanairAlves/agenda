@@ -3,26 +3,17 @@ unit uMContato;
 interface
 
 uses
-  System.SysUtils, System.DateUtils, System.Classes, REST.JsonReflect,
-  System.JSON;
+  System.SysUtils, System.Classes, System.DateUtils, System.JSON;
 
 type
-  [JsonReflect]
   TMContato = class
     private
-      [JSONNameAttribute('Id')]
       FId: integer;
-      [JSONNameAttribute('Nome')]
       FNome: string;
-      [JSONNameAttribute('Sobrenome')]
       FSobrenome: string;
-      [JSONNameAttribute('Apelido')]
       FApelido: string;
-      [JSONNameAttribute('Nascimento')]
       FNascimento: TDate;
-      [JSONNameAttribute('Relacionamento')]
       FRelacionamento: string;
-      [JSONNameAttribute('Excluído')]
       FExcluido: char;
       function GetId: integer;
       function GetNome: string;
@@ -175,7 +166,7 @@ begin
   try
     try
         if ExisteArquivoJSON then
-        contatoJsonArray := TJsonValue.ParseJSONValue(TFile.ReadAllText(arquivoContatosJSON, TEncoding.UTF8)) as TJsonArray;
+        contatoJsonArray := TJSONArray(TJsonValue.ParseJSONValue(TFile.ReadAllText(arquivoContatosJSON, TEncoding.UTF8)));
 
       contatoJsonArray.Add(SerializarJson(contato));
       TFile.WriteAllText(arquivoContatosJSON, contatoJsonArray.ToString, TEncoding.UTF8);
@@ -201,7 +192,7 @@ begin
     result.AddPair('Excluido', TJsonString.Create(contato.FExcluido));
   Except
     on E: Exception do
-      raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
+      raise Exception.Create('Erro na searização objeto contato\objeto JSON. Erro: ' + E.Message);
   end;
 end;
 
