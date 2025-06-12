@@ -8,17 +8,31 @@
 > [!Important]
 >  * [X] A princípio salvará os contatos em arquivo JSON localmente.
 >
->	* [X] Terá um módulo de inclusão de contato.
->	* [ ] Terá um módulo de consulta dos contatos.
->	* [ ] Terá um módulo de consulta de um contato.
->	* [ ] Terá um módulo de alteração de um contato.
+>	* [X] Fará a inclusão de contatos.
+>	* [ ] Fará a consulta dos contatos.
+>	* [ ] Fará a consulta de um contato.
+>	* [ ] Fará a alteração de um contato.
+>	* [ ] Fará a exclusão lógica de um contato.
 >
 >		* [ ] Cada contato poderá incluir seus endereços.
+>		    * [ ] Consultar ||
+>		    * [ ] Alterar   ||
+>		    * [ ] Remover   ||
 >		* [ ] Cada contato poderá incluir seus números de telefone.
+>		    * [ ] Consultar ||
+>		    * [ ] Alterar   ||
+>		    * [ ] Remover   ||
 >		* [ ] Cada contato poderá incluir suas redes sociais.
->		* [ ] Cada contato terá uma relação na agenda.
->		* [ ] Cada contato poderá ser excluído (exclusão digital).
+>		    * [ ] Consultar ||
+>		    * [ ] Alterar   ||
+>		    * [ ] Remover   ||
+>		* [X] Cada contato terá uma relação na agenda.
+>		    * [ ] Consultar ||
+>		    * [ ] Alterar   ||
 ---
+> [!Note]
+> ::Dados::
+> 
 > [!Note]
 > * Contato:
 >	- Nome.
