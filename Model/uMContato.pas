@@ -2,9 +2,6 @@ unit uMContato;
 
 interface
 
-uses
-  System.SysUtils, System.Classes, System.DateUtils, System.JSON;
-
 type
   TMContato = class
     private
@@ -39,29 +36,7 @@ type
       property Excluido: char read GetExcluido write SetExcluido;
   end;
 
-  TMRepositorioContato = class
-    private
-      FExisteArquivoJSON: boolean;
-      function SerializarJson(contato: TMContato): TJsonObject;
-      procedure ValidarContato(contato: TMContato);
-    public
-      constructor create;
-      procedure Salvar(contato: TMContato);
-      function Deletar(id: integer): boolean;
-      function ConsultarPorId(id: integer): TMContato;
-      function ConsultarTodos: TList;
-      class function ValidarData(data: string): TDateTime;
-      property ExisteArquivoJSON: boolean read FExisteArquivoJSON;
-  end;
-
-const
- numeroInvalido: integer = -0;
- arquivoContatosJSON: string = 'Contatos.json';
-
 implementation
-
-uses
-  REST.Json, System.IOUtils;
 
 { TMContato }
 
@@ -134,90 +109,6 @@ end;
 procedure TMContato.SetRelacionamento(const Value: string);
 begin
   FRelacionamento := Value;
-end;
-
-{ TMRepositorioContato }
-
-function TMRepositorioContato.ConsultarPorId(id: integer): TMContato;
-begin
-  //
-end;
-
-function TMRepositorioContato.ConsultarTodos: TList;
-begin
-  //
-end;
-
-constructor TMRepositorioContato.create;
-begin
-  FExisteArquivoJSON := FileExists(arquivoContatosJSON);
-end;
-
-function TMRepositorioContato.Deletar(id: integer): boolean;
-begin
-  //
-end;
-
-procedure TMRepositorioContato.Salvar(contato: TMContato);
-var
-  contatoJsonArray: TJsonArray;
-begin
-  contatoJsonArray := TJsonArray.Create;
-  try
-    try
-        if ExisteArquivoJSON then
-        contatoJsonArray := TJSONArray(TJsonValue.ParseJSONValue(TFile.ReadAllText(arquivoContatosJSON, TEncoding.UTF8)));
-
-      contatoJsonArray.Add(SerializarJson(contato));
-      TFile.WriteAllText(arquivoContatosJSON, contatoJsonArray.ToString, TEncoding.UTF8);
-    except
-      on E: Exception do
-        raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
-    end;
-  finally
-    FreeAndNil(contatoJsonArray);
-  end;
-end;
-
-function TMRepositorioContato.SerializarJson(contato: TMContato): TJsonObject;
-begin
-  result := TJsonObject.Create;
-  try
-    result.AddPair('Id', TJsonNumber.Create(contato.FId));
-    result.AddPair('Nome', TJsonString.Create(contato.FNome));
-    result.AddPair('Sobrenome', TJsonString.Create(contato.FSobrenome));
-    result.AddPair('Apelido', TJsonString.Create(contato.FApelido));
-    result.AddPair('Nascimento', DateToISO8601(contato.FNascimento));
-    result.AddPair('Relacionamento', TJsonString.Create(contato.FRelacionamento));
-    result.AddPair('Excluido', TJsonString.Create(contato.FExcluido));
-  Except
-    on E: Exception do
-      raise Exception.Create('Erro na searização objeto contato\objeto JSON. Erro: ' + E.Message);
-  end;
-end;
-
-procedure TMRepositorioContato.ValidarContato(contato: TMContato);
-begin
-  if contato.Id <= 0 then
-    raise Exception.Create('Id do contato inválido.');
-
-  if Trim(contato.Nome) = '' then
-    raise Exception.Create('O nome do contato não pode ser vázio.');
-
-  if Trim(contato.Relacionamento) = '' then
-    raise Exception.Create('O relacionamento precisa ser informado.');
-
-  if Trim(contato.Excluido) = '' then
-    raise Exception.Create('A exclusão lógica precisa ser informada com ''S'' ou ''N''.');
-
-  if (contato.Nascimento = -0) then
-    raise Exception.Create('Data de nascimento inválida.');
-end;
-
-class function TMRepositorioContato.ValidarData(data: string): TDateTime;
-begin
-  result := numeroInvalido;
-  TryStrToDate(data, result);
 end;
 
 end.

@@ -10,8 +10,8 @@
 
 -  ~~Verificar se o arquivo de contatos JSON já existe.~~
 -  ~~Gravar contato no arquivo JSON incrementando novos contatos.~~
--  __Gravar novos contatos pegando o ID max + 1.__
--  Verificar se um ID já não existe antes de gravar.
+-  ~~Gravar novos contatos pegando o ID max + 1.~~
+-  __Verificar se um ID já não existe antes de gravar.__
 -  ~~Remover JsonReflect da init uMContato.~~
 -  Verificar se o arquivo contatos é um JsonArray.
 -  Verificar se o arquivo contatos não é um Json inválido.

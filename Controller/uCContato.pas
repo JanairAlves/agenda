@@ -19,6 +19,9 @@ type
 
 implementation
 
+uses
+  uMRepositorioContato;
+
 { TCContato }
 
 constructor TCContato.Create(aValue: TProc<string>);
