@@ -32,7 +32,7 @@
 ---
 > [!Note]
 > ::Dados::
-> 
+---
 > [!Note]
 > * Contato:
 >	- Nome.

@@ -16,5 +16,6 @@ __history/
 __recovery/
 
 # Ignorar pastas comuns
+.vscode/
 Win32/
 Win64/
