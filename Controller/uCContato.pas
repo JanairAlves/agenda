@@ -63,7 +63,7 @@ function TCContato.SerializarDatasetMContatoAntesDeSalvar(
 begin
   result := TMContato.Create;
 
-  result.Id := 1; // Ler Base, pegar id max + 1;
+  result.Id := TMRepositorioContato.GetIdMaxContatos + 1;
   result.Nome := ocdsContato.FieldByName('Nome').AsString;
   result.Sobrenome := ocdsContato.FieldByName('Sobrenome').AsString;
   result.Apelido := ocdsContato.FieldByName('Apelido').AsString;
