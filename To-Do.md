@@ -13,9 +13,10 @@
 -  ~~Gravar novos contatos pegando o ID max + 1.~~
 -  ~~Verificar se um ID já não existe antes de gravar.~~
 -  ~~Remover JsonReflect da init uMContato.~~
--  __Verificar se o arquivo contatos é um JsonArray.__
--  __Verificar se o arquivo contatos não é um Json inválido.__
--  Remover memory leaks.
+-  ~~Verificar se o arquivo contatos é um JSONArray.~~
+-  ~~Verificar se o arquivo contatos não é um Json inválido.~~
+-  __Remover a uMRelacionamento.pas__
+-  ~~Remover memory leaks.~~
 
 ## Melhorias futuras
 
