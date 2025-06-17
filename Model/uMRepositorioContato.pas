@@ -8,17 +8,16 @@ uses
 type
 TMRepositorioContato = class
     private
-      function SerializarJson(contato: TMContato): TJsonObject;
       procedure ValidarContato(contato: TMContato);
+      function SerializarJson(contato: TMContato): TJsonObject;
+      function ExisteIdContato(var contatosJSONArray: TJSONArray; idContato: integer): boolean;
+      function LerArquivoContatos(var contatosJSONArray: TJSONArray): boolean;
     public
-      constructor Create;
-      destructor Destroy; overload;
       procedure Salvar(contato: TMContato);
-      function Deletar(id: integer): boolean;
-      function ConsultarPorId(id: integer): TMContato;
-      function ConsultarTodos: TList;
-      class function GetIdMaxContatos: integer;
-      class function ValidarIdContatoUnico(var contatosJsonArray: TJSONArray; idContato: integer): boolean;
+      // function Deletar(id: integer): boolean;
+      // function ConsultarPorId(id: integer): TMContato;
+      // function ConsultarTodos: TList;
+      function GetIdMaxContatos: integer;
       class function ValidarData(data: string): TDateTime;
   end;
 
@@ -33,45 +32,19 @@ uses
 
 { TMRepositorioContato }
 
-function TMRepositorioContato.ConsultarPorId(id: integer): TMContato;
-begin
-  //
-end;
-
-function TMRepositorioContato.ConsultarTodos: TList;
-begin
-  //
-end;
-
-constructor TMRepositorioContato.Create;
-begin
-end;
-
-function TMRepositorioContato.Deletar(id: integer): boolean;
-begin
-  //
-end;
-
-destructor TMRepositorioContato.Destroy;
-begin
-end;
-
-class function TMRepositorioContato.GetIdMaxContatos: integer;
+function TMRepositorioContato.GetIdMaxContatos: integer;
 var
-  contatosJsonArray: TJsonArray;
+  contatosJSONArray: TJSONArray;
   contatoJsonValue: TJSONValue;
   ProxIdContato: integer;
 begin
-  result := 0;
-  if not TFile.Exists(arquivoContatosJSON) then
-    exit;
-
-  contatosJsonArray := TJsonArray.Create;
   try
     try
-      contatosJsonArray := TJSONArray(TJsonValue.ParseJSONValue(TFile.ReadAllText(arquivoContatosJSON, TEncoding.UTF8)));
+      result := 0;
+      if not LerArquivoContatos(contatosJSONArray) then
+        exit(result);
 
-      for contatoJsonValue in contatosJsonArray do
+      for contatoJsonValue in contatosJSONArray do
       begin
         ProxIdContato := StrToInt(contatoJsonValue.FindValue('Id').Value);
         if ProxIdContato > result then
@@ -83,33 +56,27 @@ begin
         raise Exception.Create('Erro obtendo Id max dos contatos. ' + E.Message);
     end;
   finally
-    FreeAndNil(contatosJsonArray);
+    FreeAndNil(contatosJSONArray);
   end;
 end;
 
 procedure TMRepositorioContato.Salvar(contato: TMContato);
 var
-  contatosJsonArray: TJsonArray;
+  contatosJSONArray: TJSONArray;
 begin
-  contatosJsonArray := TJsonArray.Create;
-
   try
     try
-      if TFile.Exists(arquivoContatosJSON) then
-      begin
-        contatosJsonArray := TJSONArray(TJsonValue.ParseJSONValue(TFile.ReadAllText(arquivoContatosJSON, TEncoding.UTF8)));
-        if (TFile.GetSize(arquivoContatosJSON) > 0) and (not ValidarIdContatoUnico(contatosJsonArray, contato.Id)) then
-          raise Exception.Create('Inserção do Id ' + IntToStr(contato.Id) + ' duplicado.');
-      end;
+      if LerArquivoContatos(contatosJSONArray) and ExisteIdContato(contatosJSONArray, contato.Id) then
+        raise Exception.Create('Erro, inserção do Id ' + IntToStr(contato.Id) + ' duplicado.');
 
-      contatosJsonArray.Add(SerializarJson(contato));
-      TFile.WriteAllText(arquivoContatosJSON, contatosJsonArray.ToString, TEncoding.UTF8);
+      contatosJSONArray.Add(SerializarJson(contato));
+      TFile.WriteAllText(arquivoContatosJSON, contatosJSONArray.ToString, TEncoding.UTF8);
     except
       on E: Exception do
         raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
     end;
   finally
-    FreeAndNil(contatosJsonArray);
+    FreeAndNil(contatosJSONArray);
   end;
 end;
 
@@ -148,23 +115,51 @@ begin
     raise Exception.Create('Data de nascimento inv�lida.');
 end;
 
-class function TMRepositorioContato.ValidarData(data: string): TDateTime;
-begin
-  result := numeroInvalido;
-  TryStrToDate(data, result);
-end;
-
-class function TMRepositorioContato.ValidarIdContatoUnico(var contatosJsonArray: TJsonArray; idContato: integer): boolean;
+function TMRepositorioContato.ExisteIdContato(var contatosJSONArray: TJSONArray; idContato: integer): boolean;
 var
   contatoJsonValue: TJSONValue;
 begin
   result := false;
-  for contatoJsonValue in contatosJsonArray do
+  for contatoJsonValue in contatosJSONArray do
   begin
-    result := StrToInt(contatoJsonValue.FindValue('Id').Value) <> idContato;
-    if not result then
+    result := StrToInt(contatoJsonValue.FindValue('Id').Value) = idContato;
+    if result then
       break;
   end;
+end;
+
+function TMRepositorioContato.LerArquivoContatos(var contatosJSONArray: TJSONArray): boolean;
+var
+  jsonString: string;
+  jsonValue: TJsonValue;
+begin
+  try
+    if not TFile.Exists(arquivoContatosJSON) then
+      exit(false);
+
+    jsonString := TFile.ReadAllText(arquivoContatosJSON, TEncoding.UTF8);
+    if jsonString.Trim.IsEmpty then
+      exit(false);
+
+    jsonValue := TJsonValue.ParseJSONValue(jsonString);
+    if not (jsonValue is TJSONArray) then
+      raise Exception.Create('O arquivo ' + arquivoContatosJSON + ' não é um array JSON válido.');
+
+    contatosJSONArray := TJSONArray(jsonValue);
+    if contatosJSONArray = nil then
+      raise Exception.Create('O arquivo array JSON ' + arquivoContatosJSON + ' está vazio ou nulo.');
+
+    result := true;
+  except
+    on E: Exception do
+      raise Exception.Create('Erro na leitura do arquivo ' + arquivoContatosJSON + '. Erro: ' + E.Message);
+  end;
+end;
+
+class function TMRepositorioContato.ValidarData(data: string): TDateTime;
+begin
+  result := numeroInvalido;
+  TryStrToDate(data, result);
 end;
 
 end.

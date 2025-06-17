@@ -9,7 +9,7 @@ type
   TCContato = class
     private
       FDisplay: TProc<string>;
-      function SerializarDatasetMContatoAntesDeSalvar(
+      function SerializarDatasetMContato(
         ocdsContato: TClientDataSet): TMContato;
     public
       constructor Create(aValue: TProc<string>);
@@ -43,7 +43,7 @@ begin
 
   try
     try
-      oMContato := SerializarDatasetMContatoAntesDeSalvar(ocdsContato);
+      oMContato := SerializarDatasetMContato(ocdsContato);
       oMContatoRepositorio.Salvar(oMContato);
     except
       on E: Exception do
@@ -58,19 +58,25 @@ begin
   end;
 end;
 
-function TCContato.SerializarDatasetMContatoAntesDeSalvar(
-  ocdsContato: TClientDataSet): TMContato;
+function TCContato.SerializarDatasetMContato(ocdsContato: TClientDataSet): TMContato;
+var
+  oMContatoRepositorio: TMRepositorioContato;
 begin
+  oMContatoRepositorio := TMRepositorioContato.Create;
   result := TMContato.Create;
-
-  result.Id := TMRepositorioContato.GetIdMaxContatos + 1;
-  result.Nome := ocdsContato.FieldByName('Nome').AsString;
-  result.Sobrenome := ocdsContato.FieldByName('Sobrenome').AsString;
-  result.Apelido := ocdsContato.FieldByName('Apelido').AsString;
-  result.Nascimento := TMRepositorioContato.ValidarData(
-    ocdsContato.FieldByName('Nascimento').AsString);
-  result.Relacionamento := ocdsContato.FieldByName('Relacionamento').AsString;
-  result.Excluido := 'N';
+  
+  try
+    result.Id := oMContatoRepositorio.GetIdMaxContatos + 1;
+    result.Nome := ocdsContato.FieldByName('Nome').AsString;
+    result.Sobrenome := ocdsContato.FieldByName('Sobrenome').AsString;
+    result.Apelido := ocdsContato.FieldByName('Apelido').AsString;
+    result.Nascimento := TMRepositorioContato.ValidarData(
+      ocdsContato.FieldByName('Nascimento').AsString);
+    result.Relacionamento := ocdsContato.FieldByName('Relacionamento').AsString;
+    result.Excluido := 'N';
+  finally
+    FreeAndNil(oMContatoRepositorio);
+  end;
 end;
 
 end.
