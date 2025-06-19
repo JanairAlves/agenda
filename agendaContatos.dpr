@@ -5,7 +5,6 @@ uses
   uVAgenda in 'View\uVAgenda.pas' {fVAgenda},
   uVContato in 'View\uVContato.pas' {fVContato},
   uMContato in 'Model\uMContato.pas',
-  uMRelacionamento in 'Model\uMRelacionamento.pas',
   uCContato in 'Controller\uCContato.pas',
   uMRepositorioContato in 'Model\uMRepositorioContato.pas';
 

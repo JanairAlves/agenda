@@ -15,7 +15,7 @@
 -  ~~Remover JsonReflect da init uMContato.~~
 -  ~~Verificar se o arquivo contatos é um JSONArray.~~
 -  ~~Verificar se o arquivo contatos não é um Json inválido.~~
--  __Remover a uMRelacionamento.pas__
+-  ~~Remover a uMRelacionamento.pas~~
 -  ~~Remover memory leaks.~~
 
 ## Melhorias futuras
