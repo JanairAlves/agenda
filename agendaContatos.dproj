@@ -131,7 +131,6 @@
             <Form>fVContato</Form>
         </DCCReference>
         <DCCReference Include="Model\uMContato.pas"/>
-        <DCCReference Include="Model\uMRelacionamento.pas"/>
         <DCCReference Include="Controller\uCContato.pas"/>
         <DCCReference Include="Model\uMRepositorioContato.pas"/>
         <BuildConfiguration Include="Base">

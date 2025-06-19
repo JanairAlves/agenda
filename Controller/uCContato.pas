@@ -3,18 +3,18 @@ unit uCContato;
 interface
 
 uses
-  DBClient, System.SysUtils, uMContato;
+  DBClient, System.SysUtils, uMContato, System.Classes;
 
 type
   TCContato = class
     private
       FDisplay: TProc<string>;
-      function SerializarDatasetMContato(
-        ocdsContato: TClientDataSet): TMContato;
+      function SerializarDatasetMContato(ocdsContato: TClientDataSet): TMContato;
     public
       constructor Create(aValue: TProc<string>);
       destructor Destroy; override;
       procedure SalvarContato(ocdsContato: TClientDataSet);
+      function GetRelacoesContato: string;
   end;
 
 implementation
@@ -32,6 +32,14 @@ end;
 destructor TCContato.Destroy;
 begin
   inherited;
+end;
+
+function TCContato.GetRelacoesContato: string;
+var
+  relacaoContato: TMTPRelacoesContato;
+begin
+  for relacaoContato := Low(TMTPRelacoesContato) to High(TMTPRelacoesContato) do
+    result := result + TMTPRelacoesContatoDescricao[relacaoContato] + ',';
 end;
 
 procedure TCContato.SalvarContato(ocdsContato: TClientDataSet);

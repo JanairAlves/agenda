@@ -36,6 +36,20 @@ type
       property Excluido: char read GetExcluido write SetExcluido;
   end;
 
+  TMTPRelacoesContato = (
+    tpOutros = 0,
+    tpFamilia = 1,
+    tpTrabalho = 2,
+    tpAmigo = 3
+    );
+
+    const TMTPRelacoesContatoDescricao: array[TMTPRelacoesContato] of string = (
+    'Outros',
+    'Família',
+    'Trabalho',
+    'Amigo'
+    );
+
 implementation
 
 { TMContato }

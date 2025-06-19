@@ -38,6 +38,7 @@ type
     procedure AtribuirValoresContato(var ocdsContato: TClientDataSet);
     function MontarDataSetContato: Olevariant;
     procedure ExibirMensagem(mensagem: string);
+    procedure GetRelacionamentosComboBox;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -98,6 +99,8 @@ begin
 
   if not assigned(FCContato) then
     FCContato := TCContato.Create(ExibirMensagem);
+
+  GetRelacionamentosComboBox;
 end;
 
 function TfVContato.MontarDataSetContato: Olevariant;
@@ -132,13 +135,20 @@ begin
   LimparCampos;
 end;
 
+procedure TfVContato.GetRelacionamentosComboBox;
+begin
+  cbRelacionamento.Clear;
+  cbRelacionamento.Items.CommaText := FCContato.GetRelacoesContato;
+  cbRelacionamento.ItemIndex := 0;
+end;
+
 procedure TfVContato.LimparCampos;
 begin
   edtNome.Text := '';
   edtSobrenome.Text := '';
   edtApelido.Text := '';
   edtDataNascimento.Text := '';
-  cbRelacionamento.ItemIndex := 3;
+  cbRelacionamento.ItemIndex := 0;
 end;
 
 end.
