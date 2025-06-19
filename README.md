@@ -14,21 +14,21 @@
 >	* [ ] Fará a alteração de um contato.
 >	* [ ] Fará a exclusão lógica de um contato.
 >
->		* [ ] Cada contato poderá incluir seus endereços.
->		    * [ ] Consultar ||
->		    * [ ] Alterar   ||
->		    * [ ] Remover   ||
->		* [ ] Cada contato poderá incluir seus números de telefone.
->		    * [ ] Consultar ||
->		    * [ ] Alterar   ||
->		    * [ ] Remover   ||
->		* [ ] Cada contato poderá incluir suas redes sociais.
->		    * [ ] Consultar ||
->		    * [ ] Alterar   ||
->		    * [ ] Remover   ||
->		* [X] Cada contato terá uma relação na agenda.
->		    * [ ] Consultar ||
->		    * [ ] Alterar   ||
+>	* [ ] Cada contato poderá incluir seus endereços.
+>	    * [ ] Consultar
+>	    * [ ] Alterar
+>	    * [ ] Remover
+>	* [ ] Cada contato poderá incluir seus números de telefone.
+>	    * [ ] Consultar
+>	    * [ ] Alterar
+>	    * [ ] Remover
+>	* [ ] Cada contato poderá incluir suas redes sociais.
+>	    * [ ] Consultar
+>	    * [ ] Alterar
+>	    * [ ] Remover
+>	* [X] Cada contato terá uma relação na agenda.
+>	    * [ ] Consultar
+>	    * [ ] Alterar
 ---
 > [!Note]
 > ::Dados::
