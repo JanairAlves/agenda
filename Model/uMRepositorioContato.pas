@@ -89,7 +89,7 @@ begin
     result.AddPair('Sobrenome', TJsonString.Create(contato.Sobrenome));
     result.AddPair('Apelido', TJsonString.Create(contato.Apelido));
     result.AddPair('Nascimento', DateToISO8601(contato.Nascimento));
-    result.AddPair('Relacionamento', TJsonString.Create(contato.Relacionamento));
+    result.AddPair('Relacao', TJsonString.Create(contato.Relacao));
     result.AddPair('Excluido', TJsonString.Create(contato.Excluido));
   Except
     on E: Exception do
@@ -105,8 +105,8 @@ begin
   if Trim(contato.Nome) = '' then
     raise Exception.Create('O nome do contato n�o pode ser v�zio.');
 
-  if Trim(contato.Relacionamento) = '' then
-    raise Exception.Create('O relacionamento precisa ser informado.');
+  if Trim(contato.Relacao) = '' then
+    raise Exception.Create('A relação precisa ser informado.');
 
   if Trim(contato.Excluido) = '' then
     raise Exception.Create('A exclus�o l�gica precisa ser informada com ''S'' ou ''N''.');
