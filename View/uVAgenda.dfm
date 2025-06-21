@@ -44,5 +44,14 @@ object fVAgenda: TfVAgenda
       TabOrder = 0
       OnClick = btAdicionarContatoClick
     end
+    object btFechar: TButton
+      Left = 390
+      Top = 130
+      Width = 107
+      Height = 25
+      Caption = 'Fechar'
+      TabOrder = 1
+      OnClick = btFecharClick
+    end
   end
 end

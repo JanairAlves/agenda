@@ -10,7 +10,7 @@ type
       FSobrenome: string;
       FApelido: string;
       FNascimento: TDate;
-      FRelacionamento: string;
+      FRelacao: string;
       FExcluido: char;
       function GetId: integer;
       function GetNome: string;
@@ -18,21 +18,21 @@ type
       function GetExcluido: char;
       function GetNascimento: TDate;
       function GetSobrenome: string;
-      function GetRelacionamento: string;
+      function GetRelacao: string;
       procedure SetId(const Value: integer);
       procedure SetNome(const Value: string);
       procedure SetExcluido(const Value: char);
       procedure SetApelido(const Value: string);
       procedure SetNascimento(const Value: TDate);
       procedure SetSobrenome(const Value: string);
-      procedure SetRelacionamento(const Value: string);
+      procedure SetRelacao(const Value: string);
     public
       property Id: integer read GetId write SetId;
       property Nome: string read GetNome write SetNome;
       property Sobrenome: string read GetSobrenome write SetSobrenome;
       property Apelido: string read GetApelido write SetApelido;
       property Nascimento: TDate read GetNascimento write SetNascimento;
-      property Relacionamento: string read GetRelacionamento write SetRelacionamento;
+      property Relacao: string read GetRelacao write SetRelacao;
       property Excluido: char read GetExcluido write SetExcluido;
   end;
 
@@ -45,7 +45,7 @@ type
 
     const TMTPRelacoesContatoDescricao: array[TMTPRelacoesContato] of string = (
     'Outros',
-    'Família',
+    'Famï¿½lia',
     'Trabalho',
     'Amigo'
     );
@@ -84,9 +84,9 @@ begin
   result := FSobrenome;
 end;
 
-function TMContato.GetRelacionamento: string;
+function TMContato.GetRelacao: string;
 begin
-  result := FRelacionamento;
+  result := FRelacao;
 end;
 
 procedure TMContato.SetApelido(const Value: string);
@@ -101,7 +101,7 @@ end;
 
 procedure TMContato.SetId(const Value: integer);
 begin
-  { Não Implementar esse método, ou Implementar pegar o ID max + 1.}
+  { Nï¿½o Implementar esse mï¿½todo, ou Implementar pegar o ID max + 1.}
   FId := value;
 end;
 
@@ -120,9 +120,9 @@ begin
   FSobrenome := Value;
 end;
 
-procedure TMContato.SetRelacionamento(const Value: string);
+procedure TMContato.SetRelacao(const Value: string);
 begin
-  FRelacionamento := Value;
+  FRelacao := Value;
 end;
 
 end.

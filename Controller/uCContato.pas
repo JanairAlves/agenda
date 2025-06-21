@@ -80,7 +80,7 @@ begin
     result.Apelido := ocdsContato.FieldByName('Apelido').AsString;
     result.Nascimento := TMRepositorioContato.ValidarData(
       ocdsContato.FieldByName('Nascimento').AsString);
-    result.Relacionamento := ocdsContato.FieldByName('Relacionamento').AsString;
+    result.Relacao := ocdsContato.FieldByName('Relacao').AsString;
     result.Excluido := 'N';
   finally
     FreeAndNil(oMContatoRepositorio);

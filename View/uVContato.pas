@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, uCContato,
-  Datasnap.DBClient;
+  Datasnap.DBClient, Vcl.Mask;
 
 type
   TfVContato = class(TForm)
@@ -15,19 +15,19 @@ type
     edtSobrenome: TEdit;
     edtApelido: TEdit;
     lbApelido: TLabel;
-    edtDataNascimento: TEdit;
     lbNascimento: TLabel;
     btEndereco: TButton;
     btTelefone: TButton;
     btRedeSocial: TButton;
-    cbRelacionamento: TComboBox;
-    lbRelacionamento: TLabel;
+    cbRelacao: TComboBox;
+    lbRelacao: TLabel;
     pnRodape: TPanel;
     pnCentral: TPanel;
     pnBotoesAcoes: TPanel;
     btSalvar: TButton;
     btLimpar: TButton;
     btFechar: TButton;
+    edtNascimento: TMaskEdit;
     procedure btLimparClick(Sender: TObject);
     procedure btFecharClick(Sender: TObject);
     procedure btSalvarClick(Sender: TObject);
@@ -38,7 +38,7 @@ type
     procedure AtribuirValoresContato(var ocdsContato: TClientDataSet);
     function MontarDataSetContato: Olevariant;
     procedure ExibirMensagem(mensagem: string);
-    procedure GetRelacionamentosComboBox;
+    procedure GetRelacoesComboBox;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -63,8 +63,8 @@ begin
   ocdsContato.FieldByName('Nome').AsString := edtNome.Text;
   ocdsContato.FieldByName('Sobrenome').AsString := edtSobrenome.Text;
   ocdsContato.FieldByName('Apelido').AsString := edtApelido.Text;
-  ocdsContato.FieldByName('Nascimento').AsDateTime := StrToDate(edtDataNascimento.Text);
-  ocdsContato.FieldByName('Relacionamento').AsString := cbRelacionamento.Text;
+  ocdsContato.FieldByName('Nascimento').AsDateTime := StrToDate(edtNascimento.Text);
+  ocdsContato.FieldByName('Relacao').AsString := cbRelacao.Text;
   ocdsContato.Post;
 end;
 
@@ -100,7 +100,7 @@ begin
   if not assigned(FCContato) then
     FCContato := TCContato.Create(ExibirMensagem);
 
-  GetRelacionamentosComboBox;
+  GetRelacoesComboBox;
 end;
 
 function TfVContato.MontarDataSetContato: Olevariant;
@@ -115,7 +115,7 @@ begin
     cdsTemp.FieldDefs.Add('Sobrenome', ftString, 100);
     cdsTemp.FieldDefs.Add('Apelido', ftString, 50);
     cdsTemp.FieldDefs.Add('Nascimento', ftDate);
-    cdsTemp.FieldDefs.Add('Relacionamento', ftString, 10);
+    cdsTemp.FieldDefs.Add('Relacao', ftString, 10);
     cdsTemp.CreateDataSet;
     result := cdsTemp.Data;
   finally
@@ -135,20 +135,21 @@ begin
   LimparCampos;
 end;
 
-procedure TfVContato.GetRelacionamentosComboBox;
+procedure TfVContato.GetRelacoesComboBox;
 begin
-  cbRelacionamento.Clear;
-  cbRelacionamento.Items.CommaText := FCContato.GetRelacoesContato;
-  cbRelacionamento.ItemIndex := 0;
+  cbRelacao.Clear;
+  cbRelacao.Items.CommaText := FCContato.GetRelacoesContato;
+  cbRelacao.ItemIndex := 0;
 end;
 
 procedure TfVContato.LimparCampos;
 begin
   edtNome.Text := '';
+  edtNome.SetFocus;
   edtSobrenome.Text := '';
   edtApelido.Text := '';
-  edtDataNascimento.Text := '';
-  cbRelacionamento.ItemIndex := 0;
+  edtNascimento.Text := '';
+  cbRelacao.ItemIndex := 0;
 end;
 
 end.

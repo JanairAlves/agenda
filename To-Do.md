@@ -17,6 +17,9 @@
 -  ~~Verificar se o arquivo contatos não é um Json inválido.~~
 -  ~~Remover a uMRelacionamento.pas~~
 -  ~~Remover memory leaks.~~
+-  ~~Ajustar nome de relacionamento para relacao.~~
+-  ~~Configurar máscara data nascimento.~~
+-  ~~Configurar tab cadastro contato.~~
 
 ## Melhorias futuras
 
