@@ -24,6 +24,9 @@
 ## Melhorias futuras
 
 -  Logon\Logoff no acesso ao aplicativo.
--  Versão com SQLite.
+-  Versão com banco de dados 
+    *   SQLite
+    *   Arquivo texto estruturado
+    *   DBF(dBase) - Clássico
 -  Selecionar local para salvar o arquivo de dados.
 -  Gerar arquivo back-up.
