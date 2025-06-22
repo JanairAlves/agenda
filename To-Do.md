@@ -23,4 +23,7 @@
 
 ## Melhorias futuras
 
--  Implementar Logon\Logoff no acesso ao aplicativo.
+-  Logon\Logoff no acesso ao aplicativo.
+-  Versão com SQLite.
+-  Selecionar local para salvar o arquivo de dados.
+-  Gerar arquivo back-up.
