@@ -8,7 +8,6 @@ uses
 type
 TMRepositorioContato = class
     private
-      procedure ValidarContato(contato: TMContato);
       function SerializarJson(contato: TMContato): TJsonObject;
       function ExisteIdContato(var contatosJSONArray: TJSONArray; idContato: integer): boolean;
       function LerArquivoContatos(var contatosJSONArray: TJSONArray): boolean;
@@ -17,6 +16,7 @@ TMRepositorioContato = class
       // function Deletar(id: integer): boolean;
       // function ConsultarPorId(id: integer): TMContato;
       // function ConsultarTodos: TList;
+      procedure ValidarContato(contato: TMContato);
       function GetIdMaxContatos: integer;
       class function ValidarData(data: string): TDateTime;
   end;
@@ -100,19 +100,19 @@ end;
 procedure TMRepositorioContato.ValidarContato(contato: TMContato);
 begin
   if contato.Id <= 0 then
-    raise Exception.Create('Id do contato inv�lido.');
+    raise Exception.Create('Id do contato inválido.');
 
   if Trim(contato.Nome) = '' then
-    raise Exception.Create('O nome do contato n�o pode ser v�zio.');
+    raise Exception.Create('O nome do contato não pode ser vázio.');
 
   if Trim(contato.Relacao) = '' then
-    raise Exception.Create('A relação precisa ser informado.');
+    raise Exception.Create('A relação precisa ser informada.');
 
   if Trim(contato.Excluido) = '' then
-    raise Exception.Create('A exclus�o l�gica precisa ser informada com ''S'' ou ''N''.');
+    raise Exception.Create('A exclusão lógica precisa ser informada com ''S'' ou ''N''.');
 
   if (contato.Nascimento = -0) then
-    raise Exception.Create('Data de nascimento inv�lida.');
+    raise Exception.Create('Data de nascimento inválida.');
 end;
 
 function TMRepositorioContato.ExisteIdContato(var contatosJSONArray: TJSONArray; idContato: integer): boolean;

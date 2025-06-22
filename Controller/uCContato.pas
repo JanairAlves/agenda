@@ -52,6 +52,7 @@ begin
   try
     try
       oMContato := SerializarDatasetMContato(ocdsContato);
+      oMContatoRepositorio.ValidarContato(oMContato);
       oMContatoRepositorio.Salvar(oMContato);
     except
       on E: Exception do
