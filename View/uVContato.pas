@@ -28,6 +28,7 @@ type
     btLimpar: TButton;
     btFechar: TButton;
     edtNascimento: TMaskEdit;
+    btNovo: TButton;
     procedure btLimparClick(Sender: TObject);
     procedure btFecharClick(Sender: TObject);
     procedure btSalvarClick(Sender: TObject);
@@ -58,12 +59,20 @@ uses
 { TfrmViewContato }
 
 procedure TfVContato.AtribuirValoresContato(var ocdsContato: TClientDataSet);
+  function ConverteData(eHData: boolean; dataDefault, data: string): TDate;
+  begin
+    if eHData then
+      result := StrToDate(dataDefault)
+    else
+      result := StrToDate(data);
+  end;
 begin
   ocdsContato.Edit;
   ocdsContato.FieldByName('Nome').AsString := edtNome.Text;
   ocdsContato.FieldByName('Sobrenome').AsString := edtSobrenome.Text;
   ocdsContato.FieldByName('Apelido').AsString := edtApelido.Text;
-  ocdsContato.FieldByName('Nascimento').AsDateTime := StrToDate(edtNascimento.Text);
+  ocdsContato.FieldByName('Nascimento').AsDateTime :=
+    ConverteData(edtNascimento.Text = '  /  /    ', '01/01/1999', edtNascimento.Text);
   ocdsContato.FieldByName('Relacao').AsString := cbRelacao.Text;
   ocdsContato.Post;
 end;
