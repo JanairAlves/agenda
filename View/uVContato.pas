@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, uCContato,
-  Datasnap.DBClient, Vcl.Mask;
+  Datasnap.DBClient, Vcl.Mask, uVTelefone;
 
 type
   TfVContato = class(TForm)
@@ -32,14 +32,20 @@ type
     procedure btLimparClick(Sender: TObject);
     procedure btFecharClick(Sender: TObject);
     procedure btSalvarClick(Sender: TObject);
+    procedure btTelefoneClick(Sender: TObject);
+    procedure btNovoClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     FCContato: TCContato;
+    FVTelefone: TfVTelefone;
     procedure LimparCampos;
-    procedure AtribuirValoresContato(var ocdsContato: TClientDataSet);
+    procedure AtribuirValoresContato(var poCdsContato: TClientDataSet);
     function MontarDataSetContato: Olevariant;
-    procedure ExibirMensagem(mensagem: string);
+    procedure ExibirMensagem(pMensagem: string);
     procedure GetRelacoesComboBox;
+    procedure InicializarCadastroContato;
+    procedure DesabilitarCadastroContato;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -58,7 +64,7 @@ uses
 
 { TfrmViewContato }
 
-procedure TfVContato.AtribuirValoresContato(var ocdsContato: TClientDataSet);
+procedure TfVContato.AtribuirValoresContato(var poCdsContato: TClientDataSet);
   function ConverteData(eHData: boolean; dataDefault, data: string): TDate;
   begin
     if eHData then
@@ -67,14 +73,14 @@ procedure TfVContato.AtribuirValoresContato(var ocdsContato: TClientDataSet);
       result := StrToDate(data);
   end;
 begin
-  ocdsContato.Edit;
-  ocdsContato.FieldByName('Nome').AsString := edtNome.Text;
-  ocdsContato.FieldByName('Sobrenome').AsString := edtSobrenome.Text;
-  ocdsContato.FieldByName('Apelido').AsString := edtApelido.Text;
-  ocdsContato.FieldByName('Nascimento').AsDateTime :=
-    ConverteData(edtNascimento.Text = '  /  /    ', '01/01/1999', edtNascimento.Text);
-  ocdsContato.FieldByName('Relacao').AsString := cbRelacao.Text;
-  ocdsContato.Post;
+  poCdsContato.Append;
+  poCdsContato.FieldByName('Nome').AsString := Trim(edtNome.Text);
+  poCdsContato.FieldByName('Sobrenome').AsString := Trim(edtSobrenome.Text);
+  poCdsContato.FieldByName('Apelido').AsString := Trim(edtApelido.Text);
+  poCdsContato.FieldByName('Nascimento').AsDateTime :=
+    ConverteData(Trim(edtNascimento.Text) = '/  /', '01/01/1999', Trim(edtNascimento.Text));
+  poCdsContato.FieldByName('Relacao').AsString := Trim(cbRelacao.Text);
+  poCdsContato.Post;
 end;
 
 procedure TfVContato.btFecharClick(Sender: TObject);
@@ -85,6 +91,44 @@ end;
 procedure TfVContato.btLimparClick(Sender: TObject);
 begin
   LimparCampos;
+  DesabilitarCadastroContato;
+end;
+
+procedure TfVContato.btNovoClick(Sender: TObject);
+begin
+  InicializarCadastroContato;
+end;
+
+procedure TfVContato.InicializarCadastroContato;
+begin
+  btSalvar.Enabled := true;
+  btLimpar.Enabled := true;
+  btEndereco.Enabled := true;
+  btTelefone.Enabled := true;
+  btRedeSocial.Enabled := true;
+  btNovo.Enabled := false;
+
+  edtNome.Enabled := true;
+  edtSobrenome.Enabled := true;
+  edtApelido.Enabled := true;
+  edtNascimento.Enabled := true;
+  cbRelacao.Enabled := true;
+end;
+
+procedure TfVContato.DesabilitarCadastroContato;
+begin
+  btSalvar.Enabled := false;
+  btLimpar.Enabled := false;
+  btEndereco.Enabled := false;
+  btTelefone.Enabled := false;
+  btRedeSocial.Enabled := false;
+  btNovo.Enabled := true;
+
+  edtNome.Enabled := false;
+  edtSobrenome.Enabled := false;
+  edtApelido.Enabled := false;
+  edtNascimento.Enabled := false;
+  cbRelacao.Enabled := false;
 end;
 
 procedure TfVContato.btSalvarClick(Sender: TObject);
@@ -95,19 +139,26 @@ begin
   try
     ocdsContato.Data := MontarDataSetContato;
     AtribuirValoresContato(ocdsContato);
-    FCContato.SalvarContato(ocdsContato);
+    FCContato.SalvarContato(ocdsContato, FVTelefone.FcdsDadosContato);
   finally
     LimparCampos;
+    DesabilitarCadastroContato;
     FreeAndNil(ocdsContato);
+    FVTelefone.FcdsDadosContato.EmptyDataSet;
   end;
+end;
+
+procedure TfVContato.btTelefoneClick(Sender: TObject);
+begin
+  FVTelefone.ShowModal;
 end;
 
 constructor TfVContato.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  if not assigned(FCContato) then
-    FCContato := TCContato.Create(ExibirMensagem);
+  FCContato := TCContato.Create(ExibirMensagem);
+  FVTelefone := TfVTelefone.Create(nil);
 
   GetRelacoesComboBox;
 end;
@@ -125,6 +176,7 @@ begin
     cdsTemp.FieldDefs.Add('Apelido', ftString, 50);
     cdsTemp.FieldDefs.Add('Nascimento', ftDate);
     cdsTemp.FieldDefs.Add('Relacao', ftString, 10);
+
     cdsTemp.CreateDataSet;
     result := cdsTemp.Data;
   finally
@@ -136,18 +188,25 @@ destructor TfVContato.Destroy;
 begin
   inherited;
   FreeAndNil(FCContato);
+  FreeAndNil(FVTelefone);
 end;
 
-procedure TfVContato.ExibirMensagem(mensagem: string);
+procedure TfVContato.ExibirMensagem(pMensagem: string);
 begin
-  ShowMessage('Erro: ' + mensagem);
+  ShowMessage('Erro: ' + pMensagem);
+  FVTelefone.FcdsDadosContato.EmptyDataSet;
   LimparCampos;
+end;
+
+procedure TfVContato.FormCreate(Sender: TObject);
+begin
+  DesabilitarCadastroContato;
 end;
 
 procedure TfVContato.GetRelacoesComboBox;
 begin
   cbRelacao.Clear;
-  cbRelacao.Items.CommaText := FCContato.GetRelacoesContato;
+  cbRelacao.Items.CommaText := TCContato.GetRelacoesContato;
   cbRelacao.ItemIndex := 0;
 end;
 

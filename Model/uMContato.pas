@@ -1,4 +1,4 @@
-unit uMContato;
+﻿unit uMContato;
 
 interface
 
@@ -41,14 +41,14 @@ type
     tpFamilia = 1,
     tpTrabalho = 2,
     tpAmigo = 3
-    );
+  );
 
-    const TMTPRelacoesContatoDescricao: array[TMTPRelacoesContato] of string = (
+  const TMTPRelacoesContatoDescricao: array[TMTPRelacoesContato] of string = (
     'Outros',
-    'Fam�lia',
+    'Família',
     'Trabalho',
     'Amigo'
-    );
+  );
 
 implementation
 

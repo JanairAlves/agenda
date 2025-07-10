@@ -30,8 +30,15 @@ implementation
 {$R *.dfm}
 
 procedure TfVAgenda.btAdicionarContatoClick(Sender: TObject);
+var
+  contato: TfVContato;
 begin
-  fVContato.ShowModal;
+  contato := TfVContato.Create(nil);
+  try
+    contato.ShowModal;
+  finally
+    FreeAndNil(contato);
+  end;
 end;
 
 procedure TfVAgenda.btFecharClick(Sender: TObject);

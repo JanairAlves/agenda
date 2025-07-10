@@ -3,22 +3,25 @@
 interface
 
 uses
-  System.SysUtils, System.Classes, System.DateUtils, System.JSON, uMContato;
+  System.SysUtils, System.Classes, System.DateUtils, System.JSON, uMContato,
+  uMTelefone, System.Generics.Collections;
 
 type
 TMRepositorioContato = class
     private
-      function SerializarJson(contato: TMContato): TJsonObject;
-      function ExisteIdContato(var contatosJSONArray: TJSONArray; idContato: integer): boolean;
-      function LerArquivoContatos(var contatosJSONArray: TJSONArray): boolean;
+      function SerializarJsonContato(poContato: TMContato; poListaTelefonica: TObjectList<TMTelefone>): TJsonObject;
+      function SerializarJsonListaTelefonica(poListaTelefonica: TObjectList<TMTelefone>): TJSONArray;
+      function ExisteIdContato(var poContatosJSONArray: TJSONArray; pnIdContato: integer): boolean;
+      function LerArquivoContatos(var poContatosJSONArray: TJSONArray): boolean;
     public
-      procedure Salvar(contato: TMContato);
+      procedure Salvar(poContato: TMContato; poListaTelefonica: TObjectList<TMTelefone>);
       // function Deletar(id: integer): boolean;
       // function ConsultarPorId(id: integer): TMContato;
       // function ConsultarTodos: TList;
-      procedure ValidarContato(contato: TMContato);
+      procedure ValidarContato(poContato: TMContato);
+      procedure ValidarTelefone(poListaTelefonica: TObjectList<TMTelefone>);
       function GetIdMaxContatos: integer;
-      class function ValidarData(data: string): TDateTime;
+      class function ValidarData(psData: string): TDateTime;
   end;
 
 const
@@ -28,7 +31,7 @@ const
 implementation
 
 uses
-  System.IOUtils;
+  System.IOUtils, System.RegularExpressions;
 
 { TMRepositorioContato }
 
@@ -60,75 +63,129 @@ begin
   end;
 end;
 
-procedure TMRepositorioContato.Salvar(contato: TMContato);
+procedure TMRepositorioContato.Salvar(poContato: TMContato; poListaTelefonica: TObjectList<TMTelefone>);
 var
-  contatosJSONArray: TJSONArray;
+  oContatoJSONArray: TJSONArray;
 begin
   try
     try
-      if LerArquivoContatos(contatosJSONArray) and ExisteIdContato(contatosJSONArray, contato.Id) then
-        raise Exception.Create('Erro, inserção do Id ' + IntToStr(contato.Id) + ' duplicado.');
+      if LerArquivoContatos(oContatoJSONArray) and ExisteIdContato(oContatoJSONArray, poContato.Id) then
+        raise Exception.Create('Erro, inserção do Id ' + IntToStr(poContato.Id) + ' duplicado.');
 
-      contatosJSONArray.Add(SerializarJson(contato));
-      TFile.WriteAllText(arquivoContatosJSON, contatosJSONArray.ToString, TEncoding.UTF8);
+      oContatoJSONArray.Add(SerializarJsonContato(poContato, poListaTelefonica));
+      TFile.WriteAllText(arquivoContatosJSON, oContatoJSONArray.ToString, TEncoding.UTF8);
     except
       on E: Exception do
         raise Exception.Create('Erro ao salvar o contato. Erro: ' + E.Message);
     end;
   finally
-    FreeAndNil(contatosJSONArray);
+    FreeAndNil(oContatoJSONArray);
   end;
 end;
 
-function TMRepositorioContato.SerializarJson(contato: TMContato): TJsonObject;
+function TMRepositorioContato.SerializarJsonContato(poContato: TMContato; poListaTelefonica: TObjectList<TMTelefone>): TJsonObject;
 begin
   result := TJsonObject.Create;
   try
-    result.AddPair('Id', TJsonNumber.Create(contato.Id));
-    result.AddPair('Nome', TJsonString.Create(contato.Nome));
-    result.AddPair('Sobrenome', TJsonString.Create(contato.Sobrenome));
-    result.AddPair('Apelido', TJsonString.Create(contato.Apelido));
-    result.AddPair('Nascimento', DateToISO8601(contato.Nascimento));
-    result.AddPair('Relacao', TJsonString.Create(contato.Relacao));
-    result.AddPair('Excluido', TJsonString.Create(contato.Excluido));
+    result.AddPair('Id', TJSONNumber.Create(poContato.Id));
+    result.AddPair('Nome', TJSONString.Create(poContato.Nome));
+    result.AddPair('Sobrenome', TJSONString.Create(poContato.Sobrenome));
+    result.AddPair('Apelido', TJSONString.Create(poContato.Apelido));
+    result.AddPair('Nascimento', DateToISO8601(poContato.Nascimento));
+    result.AddPair('Relacao', TJSONString.Create(poContato.Relacao));
+    result.AddPair('Excluido', TJSONString.Create(poContato.Excluido));
+    if not poListaTelefonica.IsEmpty then
+      result.AddPair('ListaTelefonica', SerializarJsonListaTelefonica(poListaTelefonica));
   Except
     on E: Exception do
-      raise Exception.Create('Erro na serializar objeto contato\objeto JSON. Erro: ' + E.Message);
+      raise Exception.Create('Ocorreu um erro ao serializar objeto contato\objeto JSON. Erro: ' + E.Message);
   end;
 end;
 
-procedure TMRepositorioContato.ValidarContato(contato: TMContato);
+function TMRepositorioContato.SerializarJsonListaTelefonica(poListaTelefonica: TObjectList<TMTelefone>): TJSONArray;
+var
+  oTelefone: TMTelefone;
+  oTelefoneJson: TJSONObject;
 begin
-  if contato.Id <= 0 then
+  result := TJSONArray.Create;
+
+  for oTelefone in poListaTelefonica do
+  begin
+    oTelefoneJson := TJSONObject.Create;
+    oTelefoneJson.AddPair('IdTelefone', TJSONNumber.Create(oTelefone.IdTelefone));
+    oTelefoneJson.AddPair('NuTelefone', TJSONString.Create(oTelefone.NuTelefone));
+    oTelefoneJson.AddPair('TPLinha', TJSONString.Create(oTelefone.TPLinha));
+    oTelefoneJson.AddPair('Operadora', TJSONString.Create(oTelefone.Operadora));
+    result.Add(oTelefoneJson);
+    oTelefoneJson := nil;
+  end;
+end;
+
+procedure TMRepositorioContato.ValidarContato(poContato: TMContato);
+begin
+  if poContato.Id <= 0 then
     raise Exception.Create('Id do contato inválido.');
 
-  if Trim(contato.Nome) = '' then
+  if Trim(poContato.Nome) = '' then
     raise Exception.Create('O nome do contato não pode ser vázio.');
 
-  if Trim(contato.Relacao) = '' then
+  if Trim(poContato.Relacao) = '' then
     raise Exception.Create('A relação precisa ser informada.');
 
-  if Trim(contato.Excluido) = '' then
+  if Trim(poContato.Excluido) = '' then
     raise Exception.Create('A exclusão lógica precisa ser informada com ''S'' ou ''N''.');
 
-  if (contato.Nascimento = -0) then
+  if (poContato.Nascimento = -0) then
     raise Exception.Create('Data de nascimento inválida.');
 end;
 
-function TMRepositorioContato.ExisteIdContato(var contatosJSONArray: TJSONArray; idContato: integer): boolean;
+procedure TMRepositorioContato.ValidarTelefone(poListaTelefonica: TObjectList<TMTelefone>);
+var
+  nuTelefone: string;
+  oTelefone: TMTelefone;
+begin
+  for oTelefone in poListaTelefonica do
+  begin
+    if oTelefone.IdTelefone <= 0 then
+      raise Exception.Create('Id telefone não foi informado.');
+
+    if Trim(oTelefone.TPLinha) = '' then
+      raise Exception.Create('O tipo de linha não pode ser um valor vázio.');
+
+    nuTelefone := TRegEx.Replace(oTelefone.NuTelefone, '[\s\(\)\-]', '', [roIgnoreCase]);
+    if nuTelefone = '' then
+      raise Exception.Create('Número de telefone precisa ser informado.');
+
+    if (Trim(oTelefone.TPLinha) = 'Fixo') and (Length(nuTelefone) <> 10) then
+        raise Exception.Create('Telefone fixo precisa ser 10 números, no formato (99) 9999-9999');
+
+    if (Trim(oTelefone.TPLinha) = 'Celular') and (Length(nuTelefone) <> 11) then
+      raise Exception.Create('Telefone celular precisa ser 11 números, no formato (99) 9 9999-9999.');
+
+    if (Trim(oTelefone.TPLinha) = 'Celular') and (StrToInt(nuTelefone[3]) <> 9) then
+      raise Exception.Create('Terceiro digito do celular precisar ser o número 9, no formato (99) 9 9999-9999.');
+
+    oTelefone.NuTelefone := nuTelefone;
+
+    if Trim(oTelefone.Operadora) = '' then
+      raise Exception.Create('A operadora não pode ser vázio.');
+  end;
+end;
+
+function TMRepositorioContato.ExisteIdContato(var poContatosJSONArray: TJSONArray; pnIdContato: integer): boolean;
 var
   contatoJsonValue: TJSONValue;
 begin
   result := false;
-  for contatoJsonValue in contatosJSONArray do
+  for contatoJsonValue in poContatosJSONArray do
   begin
-    result := StrToInt(contatoJsonValue.FindValue('Id').Value) = idContato;
+    result := StrToInt(contatoJsonValue.FindValue('Id').Value) = pnIdContato;
     if result then
       break;
   end;
 end;
 
-function TMRepositorioContato.LerArquivoContatos(var contatosJSONArray: TJSONArray): boolean;
+function TMRepositorioContato.LerArquivoContatos(var poContatosJSONArray: TJSONArray): boolean;
 var
   jsonString: string;
   jsonValue: TJsonValue;
@@ -145,8 +202,8 @@ begin
     if not (jsonValue is TJSONArray) then
       raise Exception.Create('O arquivo ' + arquivoContatosJSON + ' não é um array JSON válido.');
 
-    contatosJSONArray := TJSONArray(jsonValue);
-    if contatosJSONArray = nil then
+    poContatosJSONArray := TJSONArray(jsonValue);
+    if poContatosJSONArray = nil then
       raise Exception.Create('O arquivo array JSON ' + arquivoContatosJSON + ' está vazio ou nulo.');
 
     result := true;
@@ -156,10 +213,10 @@ begin
   end;
 end;
 
-class function TMRepositorioContato.ValidarData(data: string): TDateTime;
+class function TMRepositorioContato.ValidarData(psData: string): TDateTime;
 begin
   result := numeroInvalido;
-  TryStrToDate(data, result);
+  TryStrToDate(psData, result);
 end;
 
 end.
