@@ -3,18 +3,20 @@ unit uCContato;
 interface
 
 uses
-  DBClient, System.SysUtils, uMContato, System.Classes;
+  DBClient, System.SysUtils, uMContato, System.Classes, uMTelefone, System.Generics.Collections;
 
 type
   TCContato = class
     private
       FDisplay: TProc<string>;
-      function SerializarDatasetMContato(ocdsContato: TClientDataSet): TMContato;
+      function SerializarDatasetMContato(poCdsContato: TClientDataSet): TMContato;
+      function SerializarDatasetMTelefone(poCdsTelefone: TClientDataSet): TObjectList<TMTelefone>;
     public
       constructor Create(aValue: TProc<string>);
       destructor Destroy; override;
-      procedure SalvarContato(ocdsContato: TClientDataSet);
-      function GetRelacoesContato: string;
+      procedure SalvarContato(poCdsContato, poCdsTelefone: TClientDataSet);
+      class function GetRelacoesContato: string;
+      class function GetTPLinha: string;
   end;
 
 implementation
@@ -34,7 +36,7 @@ begin
   inherited;
 end;
 
-function TCContato.GetRelacoesContato: string;
+class function TCContato.GetRelacoesContato: string;
 var
   relacaoContato: TMTPRelacoesContato;
 begin
@@ -42,18 +44,31 @@ begin
     result := result + TMTPRelacoesContatoDescricao[relacaoContato] + ',';
 end;
 
-procedure TCContato.SalvarContato(ocdsContato: TClientDataSet);
+class function TCContato.GetTPLinha: string;
+var
+  tpLinha: TMTPLinha;
+begin
+  for tpLinha := Low(TMTPLinha) to High(TMTPLinha) do
+    result := result + TMTPLinhaDescricao[tpLinha] + ',';
+end;
+
+procedure TCContato.SalvarContato(poCdsContato, poCdsTelefone: TClientDataSet);
 var
   oMContato: TMContato;
+  oListaTelefonica: TObjectList<TMTelefone>;
   oMContatoRepositorio: TMRepositorioContato;
 begin
   oMContatoRepositorio := TMRepositorioContato.Create;
 
   try
     try
-      oMContato := SerializarDatasetMContato(ocdsContato);
+      oMContato := SerializarDatasetMContato(poCdsContato);
+      oListaTelefonica := SerializarDatasetMTelefone(poCdsTelefone);
+
       oMContatoRepositorio.ValidarContato(oMContato);
-      oMContatoRepositorio.Salvar(oMContato);
+      oMContatoRepositorio.ValidarTelefone(oListaTelefonica);
+
+      oMContatoRepositorio.Salvar(oMContato, oListaTelefonica);
     except
       on E: Exception do
       begin
@@ -64,10 +79,11 @@ begin
   finally
     FreeAndNil(oMContato);
     FreeAndNil(oMContatoRepositorio);
+    FreeAndNil(oListaTelefonica);
   end;
 end;
 
-function TCContato.SerializarDatasetMContato(ocdsContato: TClientDataSet): TMContato;
+function TCContato.SerializarDatasetMContato(poCdsContato: TClientDataSet): TMContato;
 var
   oMContatoRepositorio: TMRepositorioContato;
 begin
@@ -76,15 +92,36 @@ begin
   
   try
     result.Id := oMContatoRepositorio.GetIdMaxContatos + 1;
-    result.Nome := ocdsContato.FieldByName('Nome').AsString;
-    result.Sobrenome := ocdsContato.FieldByName('Sobrenome').AsString;
-    result.Apelido := ocdsContato.FieldByName('Apelido').AsString;
+    result.Nome := poCdsContato.FieldByName('Nome').AsString;
+    result.Sobrenome := poCdsContato.FieldByName('Sobrenome').AsString;
+    result.Apelido := poCdsContato.FieldByName('Apelido').AsString;
     result.Nascimento := TMRepositorioContato.ValidarData(
-      ocdsContato.FieldByName('Nascimento').AsString);
-    result.Relacao := ocdsContato.FieldByName('Relacao').AsString;
+      poCdsContato.FieldByName('Nascimento').AsString);
+    result.Relacao := poCdsContato.FieldByName('Relacao').AsString;
     result.Excluido := 'N';
   finally
     FreeAndNil(oMContatoRepositorio);
+  end;
+end;
+
+function TCContato.SerializarDatasetMTelefone(poCdsTelefone: TClientDataSet): TObjectList<TMTelefone>;
+var
+  nContador: integer;
+begin
+  result := TObjectList<TMTelefone>.Create(true);
+
+  poCdsTelefone.First;
+  nContador := 0;
+
+  while not poCdsTelefone.Eof do
+  begin
+    result.Add(TMTelefone.Create);
+    result[nContador].IdTelefone := poCdsTelefone.FieldByName('IdTelefone').AsInteger;
+    result[nContador].NuTelefone := poCdsTelefone.FieldByName('NuTelefone').AsString;
+    result[nContador].TPLinha := poCdsTelefone.FieldByName('TPLinha').AsString;
+    result[nContador].Operadora := poCdsTelefone.FieldByName('Operadora').AsString;
+    poCdsTelefone.Next;
+    inc(nContador);
   end;
 end;
 

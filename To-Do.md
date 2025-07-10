@@ -20,13 +20,29 @@
 -  ~~Ajustar nome de relacionamento para relacao.~~
 -  ~~Configurar máscara data nascimento.~~
 -  ~~Configurar tab cadastro contato.~~
+-  ~~Configurar exibir \ ocultar grid telefones.~~
+-  ~~Gravar telefones do contato.~~
+-  ~~Remover memory leaks.~~
+-  ~~Configurar idioma botões Yes\No no MessageDlg.~~
+-  ~~Quando ocorrer erro limpar os campos\objeto de telefone.~~
+-  ~~Quando salvar limpar os campos\objeto de telefone.~~
+-  ~~Ordem tab tela de contatos.~~
+-  ~~Gravar sequencial de telefone.~~
+-  ~~Configurar dropdown na edição do campo tipo linha da grid.~~
+-  ~~Configurar habilitar botões tela contato (Novo).~~
+-  ~~Travar edição escrita campo Seq e Tipo linha da grid.~~
+-  ~~Corrigir encoder no vscode e units.~~
+-  ~~Travar edição escrita campo Tipo linha comboBox.~~
+-  ~~Adicionar label nos campos da tela telefone.~~
 
 ## Melhorias futuras
 
 -  Logon\Logoff no acesso ao aplicativo.
--  Versão com banco de dados 
-    *   SQLite
-    *   Arquivo texto estruturado
-    *   DBF(dBase) - Clássico
+-  Menu configuração arquivo INI.
+    -  Versão com banco de dados.
+		  *   ~~JSON~~
+      *   SQLite
+      *   Arquivo texto estruturado
+      *   DBF(dBase) - Clássico
 -  Selecionar local para salvar o arquivo de dados.
 -  Gerar arquivo back-up.

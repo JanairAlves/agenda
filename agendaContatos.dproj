@@ -133,6 +133,15 @@
         <DCCReference Include="Model\uMContato.pas"/>
         <DCCReference Include="Controller\uCContato.pas"/>
         <DCCReference Include="Model\uMRepositorioContato.pas"/>
+        <DCCReference Include="View\uVInformacoesContatoPai.pas">
+            <Form>fVInformacoesContatoPai</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="View\uVTelefone.pas">
+            <Form>fVTelefone</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Model\uMTelefone.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
